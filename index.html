@@ -3,231 +3,238 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>שאלון קדם קורס – סימטרון</title>
+<title>דו"ח ביקור לקוח – סימטרון</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:Arial,sans-serif;background:#f5f5f0;color:#222;min-height:100vh}
 .page-wrapper{max-width:794px;margin:0 auto;background:#f5f5f0}
-.lang-bar{background:#fff;border-bottom:1px solid #ddd;padding:8px 16px;display:flex;align-items:center;gap:8px}
-.lang-btn{background:none;border:1px solid #ccc;border-radius:20px;padding:4px 14px;cursor:pointer;font-size:13px;color:#555}
-.lang-btn.active{background:#E8611A;color:#fff;border-color:#E8611A}
+
 header{background:#fff;border-bottom:1px solid #ddd;padding:10px 16px;display:flex;flex-direction:column;align-items:center;gap:3px}
 .header-title{font-size:15px;font-weight:700;color:#E8611A;text-align:center}
 .header-sub{font-size:12px;color:#888;text-align:center}
-.notice-bar{background:#f8f4f0;border:1px solid #e8d8c8;border-radius:8px;padding:10px 14px;margin:12px 16px 0;font-size:12px;color:#777;text-align:center}
-.intro-box{background:#fff8f5;border:1px solid #f5c0a0;border-radius:10px;padding:14px 16px;margin:12px 16px;font-size:14px;line-height:1.7;color:#333}
-.intro-box strong{display:block;margin-bottom:4px;font-size:15px}
+
 .page{display:none;padding:0 16px 120px}
 .page.active{display:block}
-.page-title{font-size:20px;font-weight:700;margin:18px 0 14px}
-.section-label{background:#E8611A;color:#fff;display:inline-block;padding:4px 14px;border-radius:6px;font-size:13px;font-weight:700;margin:14px 0 8px}
-.section-label.blue{background:#2A5FA8}
-.field-group{margin-bottom:12px}
-.field-label{font-size:14px;color:#444;margin-bottom:5px;display:flex;align-items:center;gap:4px}
+
+.field-group{background:#fff;border-radius:12px;padding:14px 16px;margin:10px 0}
+.field-label{font-size:14px;color:#E8611A;font-weight:600;margin-bottom:8px;display:flex;align-items:center;gap:6px;justify-content:flex-end}
 .required{color:#E8611A}
-.field-input{width:100%;border:1px solid #ccc;border-radius:8px;padding:10px 12px;font-size:15px;font-family:Arial;outline:none;color:#222;background:#fff}
-.field-input:focus{border-color:#E8611A}
-.radio-group{display:flex;gap:10px;margin-top:4px}
-.radio-option{display:flex;align-items:center;gap:6px;background:#fff;border:1px solid #ccc;border-radius:8px;padding:8px 16px;cursor:pointer;flex:1;justify-content:center;font-size:14px}
-.radio-option.selected{border-color:#E8611A;background:#fff8f5}
-.radio-option input{accent-color:#E8611A}
-.checkbox-item{background:#fff;border:1px solid #ddd;border-radius:8px;padding:11px 14px;margin-bottom:7px;display:flex;align-items:center;justify-content:flex-end;gap:10px;cursor:pointer;font-size:14px;flex-direction:row-reverse}
+
+.field-input{width:100%;border:1.5px solid #e0e0e0;border-radius:10px;padding:12px 14px;font-size:15px;font-family:Arial;outline:none;color:#222;background:#f8f8f8;direction:rtl}
+.field-input:focus{border-color:#E8611A;background:#fff}
+.field-input::placeholder{color:#bbb}
+
+select.field-input{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23999' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:left 14px center;padding-left:36px;cursor:pointer}
+
+.time-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.time-group{background:#fff;border-radius:12px;padding:14px 16px}
+
+.checkbox-list{display:flex;flex-direction:column;gap:8px;margin-top:4px}
+.checkbox-item{display:flex;align-items:center;justify-content:flex-end;flex-direction:row-reverse;gap:10px;padding:11px 14px;background:#f8f8f8;border:1.5px solid #e0e0e0;border-radius:10px;cursor:pointer;font-size:14px;color:#333;transition:all 0.15s}
+.checkbox-item:has(input:checked){border-color:#E8611A;background:#fff8f5;color:#E8611A;font-weight:600}
 .checkbox-item input[type=checkbox]{accent-color:#E8611A;width:18px;height:18px;cursor:pointer;flex-shrink:0}
-.checkbox-item:has(input:checked){border-color:#E8611A;background:#fff8f5}
-.other-input{width:100%;border:1px solid #ccc;border-radius:8px;padding:8px 12px;font-size:13px;font-family:Arial;outline:none;margin-top:6px;background:#fff;direction:inherit}
-.other-input:focus{border-color:#E8611A}
-.course-card{background:#fff;border:1.5px solid #ddd;border-radius:10px;padding:14px;margin-bottom:9px;cursor:pointer;display:flex;align-items:flex-start;gap:12px}
-.course-card.selected{border-color:#E8611A;background:#fff8f5}
-.course-card input{accent-color:#E8611A;margin-top:3px;flex-shrink:0}
-.course-card-title{font-size:14px;font-weight:700;margin-bottom:3px}
-.course-card-desc{font-size:12px;color:#666}
-.cad-notice{background:#fff3f3;border:1px solid #f5c0b0;border-radius:8px;padding:11px 14px;font-size:13px;color:#c0392b;margin-top:4px}
-.no-exp-btn{background:#fff;border:2px solid #ddd;border-radius:8px;padding:10px 14px;margin-bottom:10px;font-size:14px;cursor:pointer;width:100%;text-align:center;color:#555}
-.no-exp-btn.active{border-color:#E8611A;background:#fff8f5;color:#E8611A;font-weight:700}
-.sw-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.sw-item{background:#fff;border:1px solid #ddd;border-radius:8px;padding:10px 12px;display:flex;align-items:center;justify-content:space-between;font-size:14px;cursor:pointer}
-.sw-item:has(input:checked){border-color:#E8611A;background:#fff8f5}
-.sw-item input{accent-color:#E8611A;width:18px;height:18px}
-.skill-wrap{overflow-x:auto}
-.skill-table{width:100%;border-collapse:collapse;margin-top:6px;min-width:280px}
-.skill-table th{font-size:11px;color:#666;padding:5px 2px;text-align:center;font-weight:400}
-.skill-table th:first-child{text-align:right;min-width:120px}
-.skill-table td{padding:3px 2px;border-bottom:1px solid #eee;font-size:12px;vertical-align:middle}
-.skill-table td:first-child{text-align:right;color:#333;font-size:11px;width:55%}
-.skill-table td:not(:first-child){text-align:center;width:15%}
-.skill-table input[type=radio]{accent-color:#E8611A;width:22px;height:22px;cursor:pointer}
-.textarea-field{width:100%;border:1px solid #ccc;border-radius:8px;padding:10px 12px;font-size:14px;font-family:Arial;min-height:80px;outline:none;resize:vertical;direction:inherit;background:#fff}
-.textarea-field:focus{border-color:#E8611A}
+
+.radio-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px}
+.radio-option{display:flex;align-items:center;justify-content:flex-end;gap:10px;padding:13px 16px;background:#f8f8f8;border:1.5px solid #e0e0e0;border-radius:10px;cursor:pointer;font-size:15px;font-weight:600;transition:all 0.15s}
+.radio-option.selected{border-color:#E8611A;background:#fff8f5}
+.radio-option input{accent-color:#E8611A;width:18px;height:18px;cursor:pointer;flex-shrink:0}
+
+textarea.field-input{min-height:100px;resize:vertical;line-height:1.6}
+
+.sig-container{border:2px dashed #E8611A;border-radius:12px;background:#fafafa;position:relative;overflow:hidden;margin-top:4px}
+canvas#sig-canvas{display:block;width:100%;height:180px;cursor:crosshair;touch-action:none}
+.sig-placeholder{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#ccc;font-size:15px;pointer-events:none;transition:opacity 0.2s}
+.sig-clear-btn{background:none;border:none;color:#E8611A;font-size:13px;cursor:pointer;padding:6px 14px;display:flex;align-items:center;gap:5px;font-family:Arial}
+
 .bottom-bar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:794px;background:#fff;border-top:1px solid #ddd;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;gap:8px;box-shadow:0 -2px 8px rgba(0,0,0,0.06)}
 .pager{font-size:13px;color:#888;white-space:nowrap}
 .btn{border:none;border-radius:8px;padding:11px 18px;font-size:14px;cursor:pointer;font-weight:700;white-space:nowrap}
 .btn-next{background:#E8611A;color:#fff}
 .btn-prev{background:#fff;color:#E8611A;border:2px solid #E8611A}
+
+.success-box{text-align:center;padding:32px 20px}
 .action-bar{display:flex;flex-direction:column;gap:12px;margin-top:28px;align-items:center}
 .btn-action{width:220px;padding:14px;font-size:16px;border-radius:10px;cursor:pointer;font-weight:700;border:none;display:flex;align-items:center;justify-content:center;gap:8px}
 .btn-pdf{background:#E8611A;color:#fff}
 .btn-share{background:#fff;color:#E8611A;border:2px solid #E8611A}
-.success-box{text-align:center;padding:32px 20px}
+
 .error-msg{color:#c0392b;font-size:12px;margin-top:5px;display:none}
-.hidden-field{display:none;margin-top:8px}
-.hidden-field.show{display:block}
+
 .loading-overlay{display:none;position:fixed;top:0;left:50%;transform:translateX(-50%);width:100%;max-width:794px;height:100%;background:rgba(255,255,255,0.92);z-index:999;flex-direction:column;align-items:center;justify-content:center;gap:14px}
 .loading-overlay.show{display:flex}
 .spinner{width:44px;height:44px;border:4px solid #eee;border-top-color:#E8611A;border-radius:50%;animation:spin 0.8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 .loading-text{font-size:15px;color:#555}
+
 #pdf-template{display:none;position:fixed;top:-99999px;left:0;width:900px;background:#fff;font-family:Arial,sans-serif;color:#222;direction:rtl}
+
+.hidden-field{display:none;margin-top:8px}
+.hidden-field.show{display:block}
+.other-input{width:100%;border:1.5px solid #e0e0e0;border-radius:10px;padding:10px 14px;font-size:14px;font-family:Arial;outline:none;background:#fff;direction:rtl}
+.other-input:focus{border-color:#E8611A}
 </style>
 </head>
 <body>
 
 <div class="page-wrapper">
+
 <div class="loading-overlay" id="loading-overlay">
   <div class="spinner"></div>
-  <div class="loading-text" id="loading-text">מכין PDF...</div>
-</div>
-
-<div class="lang-bar">
-  <span style="font-size:16px">🌐</span>
-  <button class="lang-btn active" onclick="setLang('he')">עברית</button>
-  <button class="lang-btn" onclick="setLang('en')">English</button>
-  <button class="lang-btn" onclick="setLang('ru')">Русский</button>
+  <div class="loading-text">מכין PDF...</div>
 </div>
 
 <header>
   <img id="logo-img" alt="Cimatron" style="height:38px;object-fit:contain">
-  <div class="header-title" id="header-title">שאלון קדם קורס – סימטרון</div>
-  <div class="header-sub" id="header-sub">צוות סימטרון ישראל</div>
-  <div style="font-size:10px;color:#bbb;margin-top:2px">v3.5</div>
+  <div class="header-title">דו"ח ביקור לקוח – סימטרון</div>
+  <div class="header-sub">צוות סימטרון ישראל</div>
 </header>
 
-<div class="notice-bar" id="main-notice"></div>
-
+<!-- PAGE 1 -->
 <div class="page active" id="page1">
-  <div class="intro-box"><strong id="intro-greeting"></strong><span id="intro-body"></span></div>
-  <p class="page-title" id="p1title"></p>
+  <div style="height:14px"></div>
+
   <div class="field-group">
-    <div class="field-label"><span id="lbl-fname"></span><span class="required">*</span></div>
-    <input class="field-input" id="fname" type="text">
-    <div class="error-msg" id="err-fname"></div>
+    <div class="field-label"><span class="required">*</span> שם המבקר/המהנדס 👤</div>
+    <select class="field-input" id="engineer">
+      <option value="">בחר שם...</option>
+      <option>איתן רווה</option>
+      <option>אולג גופשטיין</option>
+      <option>יניב חן</option>
+      <option>שי עזיז</option>
+      <option>איגור זבילביץ</option>
+    </select>
+    <div class="error-msg" id="err-engineer">שדה חובה</div>
   </div>
+
   <div class="field-group">
-    <div class="field-label"><span id="lbl-lname"></span><span class="required">*</span></div>
-    <input class="field-input" id="lname" type="text">
-    <div class="error-msg" id="err-lname"></div>
+    <div class="field-label"><span class="required">*</span> תאריך הביקור 📅</div>
+    <input class="field-input" id="visit-date" type="date">
+    <div class="error-msg" id="err-date">שדה חובה</div>
   </div>
+
   <div class="field-group">
-    <div class="field-label"><span id="lbl-phone"></span><span class="required">*</span></div>
-    <input class="field-input" id="phone" type="tel">
-    <div class="error-msg" id="err-phone"></div>
+    <div class="field-label"><span class="required">*</span> שם הלקוח / שם העסק 🏢</div>
+    <input class="field-input" id="customer" type="text" placeholder="הזן שם לקוח או עסק">
+    <div class="error-msg" id="err-customer">שדה חובה</div>
   </div>
+
   <div class="field-group">
-    <div class="field-label"><span id="lbl-company"></span><span class="required">*</span></div>
-    <input class="field-input" id="company" type="text">
-    <div class="error-msg" id="err-company"></div>
+    <div class="field-label"><span class="required">*</span> שם איש הקשר 👤</div>
+    <input class="field-input" id="contact" type="text" placeholder="הזן שם איש קשר">
+    <div class="error-msg" id="err-contact">שדה חובה</div>
   </div>
+
   <div class="field-group">
-    <div class="field-label" id="lbl-selfregister"></div>
-    <div class="radio-group">
-      <label class="radio-option selected" id="radio-yes-lbl">
-        <input type="radio" name="selfregister" value="yes" checked onchange="toggleCandidateName()">
-        <span id="lbl-yes"></span>
-      </label>
-      <label class="radio-option" id="radio-no-lbl">
-        <input type="radio" name="selfregister" value="no" onchange="toggleCandidateName()">
-        <span id="lbl-no"></span>
-      </label>
-    </div>
-    <div class="hidden-field" id="candidate-name-field">
-      <div class="field-label" style="margin-top:8px"><span id="lbl-candidate"></span><span class="required">*</span></div>
-      <input class="field-input" id="candidate-name" type="text">
-      <div class="error-msg" id="err-candidate"></div>
-    </div>
+    <div class="field-label"><span class="required">*</span> טלפון (לקוח) 📞</div>
+    <input class="field-input" id="phone" type="tel" placeholder="050-0000000">
+    <div class="error-msg" id="err-phone">שדה חובה</div>
   </div>
+
   <div class="field-group">
-    <div class="field-label"><span id="lbl-role"></span><span class="required">*</span></div>
-    <div style="font-size:12px;color:#E8611A;margin-bottom:6px" id="lbl-multiselect"></div>
-    <div id="roles-list"></div>
-    <div class="error-msg" id="err-role"></div>
+    <div class="field-label"><span class="required">*</span> סוג התוכנה 📄</div>
+    <select class="field-input" id="software">
+      <option value="">בחר סוג תוכנה</option>
+      <option>סימטרון</option>
+      <option>גיבסקאם</option>
+      <option>פיקוס</option>
+      <option>מולדקס</option>
+    </select>
+    <div class="error-msg" id="err-software">שדה חובה</div>
   </div>
 </div>
 
+<!-- PAGE 2 -->
 <div class="page" id="page2">
-  <p class="page-title" id="p2title"></p>
-  <div id="courses-list"></div>
-  <div class="cad-notice" id="cad-notice-text"></div>
-  <div class="error-msg" id="err-course" style="margin-top:8px"></div>
-</div>
+  <div style="height:14px"></div>
 
-<div class="page" id="page3">
-  <p class="page-title" id="p3title"></p>
-  <div style="font-size:12px;color:#E8611A;margin-bottom:10px" id="p3-multi"></div>
-  <button class="no-exp-btn" id="no-exp-btn" onclick="toggleNoExp()"></button>
-  <div id="sw-grid-wrap">
-    <div class="sw-grid" id="sw-grid"></div>
-    <div class="hidden-field" id="sw-other-field" style="margin-top:8px">
-      <input class="other-input" id="sw-other-text" type="text">
+  <div class="time-row">
+    <div class="time-group">
+      <div class="field-label" style="font-size:13px"><span class="required">*</span> שעת הגעה 🕐</div>
+      <input class="field-input" id="time-start" type="time">
+      <div class="error-msg" id="err-time-start">שדה חובה</div>
+    </div>
+    <div class="time-group">
+      <div class="field-label" style="font-size:13px"><span class="required">*</span> שעת סיום 🕐</div>
+      <input class="field-input" id="time-end" type="time">
+      <div class="error-msg" id="err-time-end">שדה חובה</div>
     </div>
   </div>
-  <div class="error-msg" id="err-sw"></div>
-</div>
 
-<div class="page" id="page4">
-  <p class="page-title" id="p4title"></p>
-  <div id="cad-section">
-    <div class="section-label" id="sec-cad">CAD</div>
-    <div class="skill-wrap">
-      <table class="skill-table">
-        <thead><tr><th id="th-topic"></th><th id="th-none"></th><th id="th-basic"></th><th id="th-adv"></th></tr></thead>
-        <tbody id="cad-rows"></tbody>
-      </table>
+  <div class="field-group">
+    <div class="field-label">נסיעות (זמן/מרחק) 🚗</div>
+    <input class="field-input" id="travel" type="text" placeholder='לדוגמה: 45 דקות / 30 ק"מ'>
+  </div>
+
+  <div class="field-group">
+    <div class="field-label"><span class="required">*</span> מטרת הביקור</div>
+    <div class="checkbox-list" id="purpose-list">
+      <label class="checkbox-item"><span>בדיקת פוסט פרוסוסר</span><input type="checkbox" value="0"></label>
+      <label class="checkbox-item"><span>מכירות</span><input type="checkbox" value="1"></label>
+      <label class="checkbox-item"><span>הדרכה</span><input type="checkbox" value="2"></label>
+      <label class="checkbox-item"><span>תמיכה טכנית</span><input type="checkbox" value="3"></label>
+      <label class="checkbox-item"><span>התקנה</span><input type="checkbox" value="4"></label>
+      <label class="checkbox-item"><span>מסירת פוסט פרוסוסר</span><input type="checkbox" value="5"></label>
+      <label class="checkbox-item"><span>מסירת פלאג</span><input type="checkbox" value="6"></label>
+      <label class="checkbox-item"><span>אחר</span><input type="checkbox" value="7" id="purpose-other-cb"></label>
+    </div>
+    <div class="hidden-field" id="purpose-other-field">
+      <input class="other-input" id="purpose-other-text" type="text" placeholder="פרט כאן...">
+    </div>
+    <div style="margin-top:10px">
+      <div class="field-label" style="font-size:13px;margin-bottom:6px">פירוט נוסף (אופציונלי)</div>
+      <textarea class="other-input" id="purpose-detail" rows="3" placeholder="פרט את מטרת הביקור בחופשיות..." style="resize:vertical;min-height:70px;line-height:1.6"></textarea>
+    </div>
+    <div class="error-msg" id="err-purpose">יש לבחור לפחות מטרה אחת</div>
+  </div>
+
+  <div class="field-group">
+    <div class="field-label">תיאור הביקור 📄</div>
+    <textarea class="field-input" id="description" placeholder="תאר את פעילות הביקור..."></textarea>
+  </div>
+
+  <div class="field-group">
+    <div class="field-label"><span class="required">*</span> האם יש צורך במשך טיפול?</div>
+    <div class="radio-row">
+      <label class="radio-option selected" id="radio-no-lbl">
+        <span>לא</span><input type="radio" name="followup" value="no" checked onchange="updateRadio()">
+      </label>
+      <label class="radio-option" id="radio-yes-lbl">
+        <span>כן</span><input type="radio" name="followup" value="yes" onchange="updateRadio()">
+      </label>
+    </div>
+    <div class="hidden-field" id="followup-detail-field" style="margin-top:10px">
+      <input class="other-input" id="followup-detail" type="text" placeholder="פרט את המשך הטיפול הנדרש...">
     </div>
   </div>
-  <div class="section-label" style="margin-top:14px" id="sec-cam">CAM</div>
-  <div class="skill-wrap">
-    <table class="skill-table">
-      <thead><tr><th id="th-topic2"></th><th id="th-none2"></th><th id="th-basic2"></th><th id="th-adv2"></th></tr></thead>
-      <tbody id="cam-rows"></tbody>
-    </table>
-  </div>
-  <div id="gibbs-section" style="display:none">
-    <div class="section-label blue" style="margin-top:14px">GibbsCAM</div>
-    <div class="skill-wrap">
-      <table class="skill-table">
-        <thead><tr><th></th><th id="gth-none"></th><th id="gth-basic"></th><th id="gth-adv"></th></tr></thead>
-        <tbody id="gibbs-rows"></tbody>
-      </table>
+
+  <div class="field-group">
+    <div class="field-label"><span class="required">*</span> חתימת הלקוח</div>
+    <div class="sig-container">
+      <canvas id="sig-canvas"></canvas>
+      <div class="sig-placeholder" id="sig-placeholder">חתום/י כאן</div>
     </div>
+    <button class="sig-clear-btn" onclick="clearSignature()">🗑 נקה חתימה</button>
+    <div class="error-msg" id="err-sig">יש לחתום לפני שמירה</div>
   </div>
 </div>
 
-<div class="page" id="page5">
-  <p class="page-title" id="p5title"></p>
-  <div style="font-size:12px;color:#E8611A;margin-bottom:10px" id="p5-multi"></div>
-  <div id="goals-list"></div>
-  <div class="hidden-field" id="goals-other-field" style="margin-top:4px">
-    <input class="other-input" id="goals-other-text" type="text">
-  </div>
-  <div class="error-msg" id="err-goals"></div>
-  <div class="field-group" style="margin-top:14px">
-    <div class="field-label"><span id="lbl-expectations"></span></div>
-    <textarea class="textarea-field" id="expectations"></textarea>
-  </div>
-</div>
-
+<!-- Success -->
 <div class="page" id="page-success">
   <div class="success-box">
     <div style="font-size:52px;margin-bottom:12px">✅</div>
-    <h2 id="success-title" style="margin-bottom:8px;color:#E8611A"></h2>
-    <p id="success-msg" style="color:#666;font-size:14px;line-height:1.7;white-space:pre-line"></p>
+    <h2 style="margin-bottom:8px;color:#E8611A">הדוח הושלם!</h2>
+    <p style="color:#666;font-size:14px;line-height:1.7">ניתן לשמור את ה-PDF ולשלוח אותו.</p>
     <div class="action-bar">
       <button class="btn-action btn-pdf" onclick="doSavePDF()">
-        <span style="font-size:18px">📄</span><span id="lbl-save-pdf">שמור PDF</span>
+        <span style="font-size:18px">📄</span><span>שמור PDF</span>
       </button>
       <button class="btn-action btn-share" onclick="doShare()">
-        <span style="font-size:18px">↗</span><span id="lbl-share">שתף</span>
+        <span style="font-size:18px">↗</span><span>שתף</span>
+      </button>
+      <button class="btn-action" onclick="goBackToEdit()" style="background:#fff;color:#555;border:2px solid #ccc;margin-top:8px">
+        <span style="font-size:18px">✏️</span><span>חזור לעריכה</span>
       </button>
     </div>
   </div>
@@ -236,380 +243,212 @@ header{background:#fff;border-bottom:1px solid #ddd;padding:10px 16px;display:fl
 <div id="pdf-template"></div>
 
 <div class="bottom-bar" id="bottom-bar">
-  <button class="btn btn-next" id="btn-next" onclick="nextPage()"></button>
-  <div class="pager" id="pager">5 / 1</div>
-  <button class="btn btn-prev" id="btn-prev" onclick="prevPage()"></button>
+  <button class="btn btn-next" id="btn-next" onclick="nextPage()">הבא ›</button>
+  <div class="pager" id="pager">2 / 1</div>
+  <button class="btn btn-prev" id="btn-prev" onclick="prevPage()">‹ קודם</button>
 </div>
 
-</div><!-- /page-wrapper -->
+</div>
 
 <script>
-const T={
-  he:{
-    headerTitle:'שאלון קדם קורס – סימטרון',headerSub:'צוות סימטרון ישראל',
-    notice:'השאלון מנוסח בלשון זכר מטעמי נוחות בלבד, אך מיועד ומתייחס באופן שווה לכל המגדרים.',
-    introGreeting:'חניך יקר,',
-    introBody:'על מנת לשפר את היערכותנו לקורס ועל מנת שתוכל להפיק את המיטב והמירב עבורך, נודה לך על מילוי השאלון. השאלון הינו לשימוש פנימי שלנו בלבד.',
-    p1:'פרטים אישיים',p2:'בחירת קורס',p3:'ניסיון קודם בתוכנות CAD/CAM',p4:'רמת הידע הקודם שלך',p5:'מטרת ההשתתפות בקורס',
-    fname:'שם פרטי',lname:'שם משפחה',phone:'טלפון',company:'שם חברה',
-    selfregister:'האם אתה ממלא את הטופס עבורך?',yes:'כן',no:'לא',candidate:'שם המועמד',
-    role:'מהו התפקיד שלך כיום?',multiselect:'ניתן לסמן יותר מאפשרות אחת',
-    roles:['מתכנן CAM','כוון מכונה','מפעיל מכונה','תכנון (CAD בלבד)','אחר'],
-    courses:[
-      {t:'קורס CAD/CAM סימטרון משולב',d:'מיועד לבעלי ניסיון בתוכנות CAD/CAM אחרות המעוניינים לרכוש ידע להכנת תוכניות NC בסימטרון.'},
-      {t:'קורס CAM סימטרון מתקדם – 5 צירים סימולטני',d:'מיועד לבעלי ניסיון קודם בהכנת תוכניות NC בסימטרון, המעוניינים להעמיק בעיבוד ב-5 צירים סימולטני.'},
-      {t:'קורס GibbsCAM',d:'מיועד למעוניינים לרכוש ידע בהכנת תוכניות עיבוד לחריטה וכרסום בתוכנת GibbsCAM.'}
-    ],
-    cadNotice:'באם נדרש לך קורס CAD בסיסי (תכנון) המיועד לכאלו שעוסקים בתכנון בלבד – אנא פנה אלינו.',
-    noExp:'אין לי ניסיון בתוכנות CAD/CAM',p3multi:'ניתן לסמן יותר מאפשרות אחת',
-    sw:['Cimatron','MasterCam','GibbsCAM','סוליד וורקס','סולידקאם','Catia','UG-NX','אחר'],
-    thTopic:'נושא',thNone:'ללא ניסיון',thBasic:'ידע בסיסי',thAdv:'ידע מתקדם',
-    cadRows:['תכנון ובניית מודלים (Modeling)','תכנון מודלים בהרכבות (Assembly)','שרטוט מודלים (Drafting / Drawing)'],
-    camRows:['הכנת תוכניות בעיבוד על קונטורים (2X)','הכנת תוכניות בעיבוד על נפח (3X)','הכנת תוכניות בעיבוד משטחים (Surface 3X)','הכנת תוכניות בעיבוד ב-5 צירים סימולטני (5X)','הכנת תוכניות עיבוד ב-5 צירים או 4 צירים אינדקס (4X/5X)'],
-    gibbsRows:['הכנת עיבודים לחריטה TURNING','הכנת עיבודים למכונות MTM','הכנת עיבודים למכונות SWISSTYPE'],
-    goals:['אני מתכנן/ת לעבוד באופן עצמאי בתוכנה ולהכין תוכניות עיבוד בפועל','אני צפוי/ה להשתמש בתוכנה כחלק מהתפקיד, אך קיימת תמיכה מקצועית בחברה','אני מעוניין/ת להעמיק ולהרחיב ידע מקצועי בתחום','אני בתהליך בחינת רכישת התוכנה ועליי להעריך את התאמתה לצרכים שלנו','נרשמתי לקורס בהנחיית מקום העבודה','אחר'],
-    p5multi:'ניתן לסמן יותר מאפשרות אחת',
-    expectations:'ציפיות מהקורס (אופציונלי)',otherPlaceholder:'פרט/י כאן...',
-    next:'הבא ›',prev:'‹ קודם',nextFinal:'סיום ›',
-    errReq:'שדה חובה',errRole:'יש לבחור לפחות אחד',errCourse:'יש לבחור קורס',
-    errSw:'יש לבחור לפחות אחת או לסמן "אין ניסיון"',errGoals:'יש לבחור לפחות מטרה אחת',
-    successTitle:'השאלון הושלם!',successMsg:'ניתן לשמור את ה-PDF ולשלוח אותו ל:\nmirit.safrin@cimatron.com',
-    savePdf:'שמור PDF',share:'שתף',loading:'מכין PDF...',dateLabel:'תאריך',pageLabel:'עמוד',
-  },
-  en:{
-    headerTitle:'Pre-Course Questionnaire – Cimatron',headerSub:'Cimatron Israel Team',
-    notice:'The questionnaire is written in masculine form for convenience only, but is intended equally for all genders.',
-    introGreeting:'Dear Trainee,',introBody:'In order to improve our preparation for the course and to help you get the most out of it, we would appreciate your filling out this questionnaire. The questionnaire is for our internal use only.',
-    p1:'Personal Details',p2:'Course Selection',p3:'Previous CAD/CAM Experience',p4:'Previous Knowledge Level',p5:'Course Participation Goals',
-    fname:'First Name',lname:'Last Name',phone:'Phone',company:'Company Name',
-    selfregister:'Are you filling this form for yourself?',yes:'Yes',no:'No',candidate:'Candidate Name',
-    role:'What is your current role?',multiselect:'You may select more than one',
-    roles:['CAM Programmer','Machine Setup','Machine Operator','Design (CAD only)','Other'],
-    courses:[
-      {t:'Cimatron CAD/CAM Combined Course',d:'For those with experience in other CAD/CAM software who want to learn NC programming in Cimatron.'},
-      {t:'Cimatron Advanced CAM – 5-Axis Simultaneous',d:'For those with prior NC programming experience in Cimatron, aiming to advance in 5-axis simultaneous machining.'},
-      {t:'GibbsCAM Course',d:'For those who want to learn turning and milling programming using GibbsCAM.'}
-    ],
-    cadNotice:'If you need a basic CAD course (design only) – please contact us.',
-    noExp:'No CAD/CAM software experience',p3multi:'You may select more than one',
-    sw:['Cimatron','MasterCam','GibbsCAM','SolidWorks','SolidCAM','Catia','UG-NX','Other'],
-    thTopic:'Topic',thNone:'No Experience',thBasic:'Basic',thAdv:'Advanced',
-    cadRows:['3D Modeling','Assembly Design','Drafting / Drawing'],
-    camRows:['2X Contouring','3X Volumetric Machining','Surface 3X Machining','5X Simultaneous Machining','4X/5X Index Machining'],
-    gibbsRows:['Turning (TURNING)','MTM Machines','SWISSTYPE Machines'],
-    goals:['I plan to work independently with the software','I will use the software as part of my role with company support','I want to deepen my professional knowledge','I am evaluating the software for purchase','I enrolled by workplace instruction','Other'],
-    p5multi:'You may select more than one',expectations:'Course Expectations (optional)',otherPlaceholder:'Please specify...',
-    next:'Next ›',prev:'‹ Back',nextFinal:'Finish ›',
-    errReq:'Required',errRole:'Select at least one',errCourse:'Please select a course',
-    errSw:'Select at least one or mark "No experience"',errGoals:'Select at least one goal',
-    successTitle:'Questionnaire Complete!',successMsg:'Save the PDF and send it to:\nshay.aziz@cimatron.com',
-    savePdf:'Save PDF',share:'Share',loading:'Preparing PDF...',dateLabel:'Date',pageLabel:'Page',
-  },
-  ru:{
-    headerTitle:'Анкета перед курсом – Cimatron',headerSub:'Команда Cimatron Израиль',
-    notice:'Анкета написана в мужском роде для удобства, но предназначена одинаково для всех.',
-    introGreeting:'Уважаемый слушатель,',introBody:'Чтобы улучшить нашу подготовку к курсу и помочь вам получить максимум пользы, просим заполнить эту анкету. Анкета предназначена исключительно для внутреннего использования.',
-    p1:'Личные данные',p2:'Выбор курса',p3:'Опыт работы с CAD/CAM',p4:'Уровень знаний',p5:'Цели участия в курсе',
-    fname:'Имя',lname:'Фамилия',phone:'Телефон',company:'Название компании',
-    selfregister:'Вы заполняете форму для себя?',yes:'Да',no:'Нет',candidate:'Имя кандидата',
-    role:'Ваша текущая должность?',multiselect:'Можно выбрать несколько',
-    roles:['Программист CAM','Наладчик станка','Оператор станка','Проектировщик (CAD)','Другое'],
-    courses:[
-      {t:'Комбинированный курс CAD/CAM Cimatron',d:'Для имеющих опыт в других CAD/CAM программах и желающих освоить NC-программирование в Cimatron.'},
-      {t:'Продвинутый CAM – 5-осевая обработка',d:'Для работающих с Cimatron и желающих углубиться в 5-осевую обработку.'},
-      {t:'Курс GibbsCAM',d:'Для желающих освоить токарную и фрезерную обработку в GibbsCAM.'}
-    ],
-    cadNotice:'Если вам нужен базовый курс CAD – пожалуйста, свяжитесь с нами.',
-    noExp:'Нет опыта работы с CAD/CAM',p3multi:'Можно выбрать несколько',
-    sw:['Cimatron','MasterCam','GibbsCAM','SolidWorks','SolidCAM','Catia','UG-NX','Другое'],
-    thTopic:'Тема',thNone:'Нет опыта',thBasic:'Базовые',thAdv:'Продвинутые',
-    cadRows:['3D-моделирование','Сборочное проектирование','Чертёж (Drafting)'],
-    camRows:['NC 2X контурирование','NC 3X объёмная обработка','NC Surface 3X','NC 5X одновременная','NC 4X/5X индексная'],
-    gibbsRows:['Токарная (TURNING)','Станки MTM','Станки SWISSTYPE'],
-    goals:['Планирую самостоятельно работать в программе','Буду использовать ПО при поддержке компании','Хочу углубить профессиональные знания','Оцениваю покупку ПО','Записался по направлению работодателя','Другое'],
-    p5multi:'Можно выбрать несколько',expectations:'Ожидания от курса (необязательно)',otherPlaceholder:'Укажите подробнее...',
-    next:'Далее ›',prev:'‹ Назад',nextFinal:'Завершить ›',
-    errReq:'Обязательное поле',errRole:'Выберите хотя бы один',errCourse:'Выберите курс',
-    errSw:'Выберите хотя бы одну программу или "Нет опыта"',errGoals:'Выберите хотя бы одну цель',
-    successTitle:'Анкета завершена!',successMsg:'Сохраните PDF и отправьте на:\nshay.aziz@cimatron.com',
-    savePdf:'Сохранить PDF',share:'Поделиться',loading:'Подготовка PDF...',dateLabel:'Дата',pageLabel:'Стр.',
-  }
-};
+const TOTAL = 2;
+let currentPage = 1;
+let savedPdfBlob = null, savedFilename = '';
+let sigHasData = false;
+let logoBase64 = '';
 
-let lang='he',currentPage=1,totalPages=5;
-let noExpSelected=false,savedPdfBlob=null,savedFilename='';
-
-// טעינת לוגו ל-base64 דרך fetch
-let logoBase64='';
+// ── לוגו ──
 fetch('logo.png')
-  .then(r=>r.blob())
-  .then(blob=>{
-    const fr=new FileReader();
-    fr.onloadend=()=>{
-      logoBase64=fr.result;
-      document.getElementById('logo-img').src=logoBase64;
-    };
+  .then(r => r.blob())
+  .then(blob => {
+    const fr = new FileReader();
+    fr.onloadend = () => { logoBase64 = fr.result; document.getElementById('logo-img').src = logoBase64; };
     fr.readAsDataURL(blob);
   })
-  .catch(()=>{
-    document.getElementById('logo-img').style.display='none';
-  });
+  .catch(() => { document.getElementById('logo-img').style.display = 'none'; });
 
-function t(k){return T[lang][k]||''}
+// ── תאריך אוטומטי ──
+document.getElementById('visit-date').value = new Date().toISOString().split('T')[0];
 
-function setLang(l){
-  lang=l;
-  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));
-  document.querySelector(`.lang-btn[onclick="setLang('${l}')"]`).classList.add('active');
-  document.documentElement.lang=l;
-  document.documentElement.dir=l==='he'?'rtl':'ltr';
-  rebuildAll();
+// ── חתימה ──
+const sigCanvas = document.getElementById('sig-canvas');
+const sigCtx = sigCanvas.getContext('2d');
+let drawing = false, lastX = 0, lastY = 0;
+
+function resizeSigCanvas(){
+  const rect = sigCanvas.getBoundingClientRect();
+  const dpr = window.devicePixelRatio || 1;
+  sigCanvas.width = rect.width * dpr;
+  sigCanvas.height = rect.height * dpr;
+  sigCtx.scale(dpr, dpr);
+  sigCtx.strokeStyle = '#222';
+  sigCtx.lineWidth = 2.5;
+  sigCtx.lineCap = 'round';
+  sigCtx.lineJoin = 'round';
+}
+window.addEventListener('resize', resizeSigCanvas);
+setTimeout(resizeSigCanvas, 100);
+
+function getSigPos(e){
+  const rect = sigCanvas.getBoundingClientRect();
+  if(e.touches) return {x: e.touches[0].clientX-rect.left, y: e.touches[0].clientY-rect.top};
+  return {x: e.clientX-rect.left, y: e.clientY-rect.top};
+}
+sigCanvas.addEventListener('mousedown', e=>{drawing=true; const p=getSigPos(e); lastX=p.x; lastY=p.y;});
+sigCanvas.addEventListener('mousemove', e=>{
+  if(!drawing) return;
+  const p=getSigPos(e);
+  sigCtx.beginPath(); sigCtx.moveTo(lastX,lastY); sigCtx.lineTo(p.x,p.y); sigCtx.stroke();
+  lastX=p.x; lastY=p.y; sigHasData=true;
+  document.getElementById('sig-placeholder').style.opacity='0';
+});
+sigCanvas.addEventListener('mouseup', ()=>{drawing=false;});
+sigCanvas.addEventListener('mouseleave', ()=>{drawing=false;});
+sigCanvas.addEventListener('touchstart', e=>{e.preventDefault(); drawing=true; const p=getSigPos(e); lastX=p.x; lastY=p.y;},{passive:false});
+sigCanvas.addEventListener('touchmove', e=>{
+  e.preventDefault(); if(!drawing) return;
+  const p=getSigPos(e);
+  sigCtx.beginPath(); sigCtx.moveTo(lastX,lastY); sigCtx.lineTo(p.x,p.y); sigCtx.stroke();
+  lastX=p.x; lastY=p.y; sigHasData=true;
+  document.getElementById('sig-placeholder').style.opacity='0';
+},{passive:false});
+sigCanvas.addEventListener('touchend', ()=>{drawing=false;});
+
+function clearSignature(){
+  const rect=sigCanvas.getBoundingClientRect();
+  sigCtx.clearRect(0,0,rect.width*2,rect.height*2);
+  sigHasData=false;
+  document.getElementById('sig-placeholder').style.opacity='1';
 }
 
-function toggleCandidateName(){
-  document.querySelectorAll('.radio-option').forEach(e=>e.classList.remove('selected'));
-  const c=document.querySelector('input[name=selfregister]:checked');
-  if(c)c.closest('.radio-option').classList.add('selected');
-  const isNo=c?.value==='no';
-  document.getElementById('candidate-name-field').classList.toggle('show',isNo);
-  if(!isNo)document.getElementById('candidate-name').value='';
+// ── אחר במטרה ──
+document.getElementById('purpose-other-cb').addEventListener('change', function(){
+  document.getElementById('purpose-other-field').classList.toggle('show', this.checked);
+});
+
+// ── המשך טיפול ──
+function updateRadio(){
+  const val=document.querySelector('input[name=followup]:checked')?.value;
+  document.getElementById('radio-no-lbl').classList.toggle('selected', val==='no');
+  document.getElementById('radio-yes-lbl').classList.toggle('selected', val==='yes');
+  document.getElementById('followup-detail-field').classList.toggle('show', val==='yes');
 }
 
-function isGibbs(){return document.querySelector('input[name=course]:checked')?.value==='2';}
-function updateGibbsSection(){
-  const g=isGibbs();
-  document.getElementById('gibbs-section').style.display=g?'block':'none';
-  document.getElementById('cad-section').style.display=g?'none':'block';
-}
-
-function toggleNoExp(){
-  noExpSelected=!noExpSelected;
-  document.getElementById('no-exp-btn').classList.toggle('active',noExpSelected);
-  const wrap=document.getElementById('sw-grid-wrap');
-  wrap.style.opacity=noExpSelected?'0.35':'1';
-  wrap.style.pointerEvents=noExpSelected?'none':'auto';
-  if(noExpSelected){
-    document.querySelectorAll('#sw-grid input[type=checkbox]').forEach(cb=>{cb.checked=false;cb.dispatchEvent(new Event('change'));});
-    document.getElementById('sw-other-field').classList.remove('show');
-    document.getElementById('sw-other-text').value='';
-  }
-  document.getElementById('err-sw').style.display='none';
-}
-
-function rebuildAll(){
-  const ids={
-    'header-title':'headerTitle','header-sub':'headerSub','main-notice':'notice',
-    'intro-greeting':'introGreeting','intro-body':'introBody',
-    'p1title':'p1','p2title':'p2','p3title':'p3','p4title':'p4','p5title':'p5',
-    'lbl-fname':'fname','lbl-lname':'lname','lbl-phone':'phone','lbl-company':'company',
-    'lbl-selfregister':'selfregister','lbl-yes':'yes','lbl-no':'no','lbl-candidate':'candidate',
-    'lbl-role':'role','lbl-multiselect':'multiselect','lbl-expectations':'expectations',
-    'p3-multi':'p3multi','p5-multi':'p5multi','cad-notice-text':'cadNotice','no-exp-btn':'noExp',
-    'err-fname':'errReq','err-lname':'errReq','err-phone':'errReq','err-company':'errReq',
-    'err-candidate':'errReq','err-role':'errRole','err-course':'errCourse',
-    'err-sw':'errSw','err-goals':'errGoals',
-    'success-title':'successTitle','success-msg':'successMsg',
-    'lbl-save-pdf':'savePdf','lbl-share':'share',
-  };
-  Object.entries(ids).forEach(([id,key])=>{const el=document.getElementById(id);if(el)el.textContent=t(key);});
-  [['th-topic','th-none','th-basic','th-adv'],['th-topic2','th-none2','th-basic2','th-adv2']].forEach(g=>{
-    g.forEach((id,i)=>{const el=document.getElementById(id);if(el)el.textContent=[t('thTopic'),t('thNone'),t('thBasic'),t('thAdv')][i];});
-  });
-  ['gth-none','gth-basic','gth-adv'].forEach((id,i)=>{const el=document.getElementById(id);if(el)el.textContent=[t('thNone'),t('thBasic'),t('thAdv')][i];});
-  const swOt=document.getElementById('sw-other-text');if(swOt)swOt.placeholder=t('otherPlaceholder');
-  const goOt=document.getElementById('goals-other-text');if(goOt)goOt.placeholder=t('otherPlaceholder');
-  buildRoles();buildCourses();buildSoftware();buildSkillTables();buildGoals();updateNav();
-}
-
-function buildRoles(){
-  const el=document.getElementById('roles-list');
-  const checked=Array.from(el.querySelectorAll('input:checked')).map(i=>i.value);
-  const hadOther=el.querySelector('#role-other-text')?.value||'';
-  const last=t('roles').length-1;
-  el.innerHTML=t('roles').map((r,i)=>`<div class="checkbox-item" onclick="toggleCheck(this,event)"><span>${r}</span><input type="checkbox" value="${i}" ${checked.includes(String(i))?'checked':''}></div>`).join('');
-  const ow=document.createElement('div');ow.className='hidden-field'+(checked.includes(String(last))?' show':'');ow.id='role-other-wrap';
-  ow.innerHTML=`<input class="other-input" id="role-other-text" type="text" placeholder="${t('otherPlaceholder')}" value="${hadOther}">`;
-  el.appendChild(ow);
-  el.querySelectorAll('.checkbox-item').forEach((item,i)=>{
-    item.querySelector('input').addEventListener('change',()=>{if(i===last)document.getElementById('role-other-wrap').classList.toggle('show',item.querySelector('input').checked);});
-  });
-}
-
-function toggleCheck(div,event){const cb=div.querySelector('input[type=checkbox]');if(event&&event.target===cb)return;cb.checked=!cb.checked;cb.dispatchEvent(new Event('change'));}
-
-function buildCourses(){
-  const el=document.getElementById('courses-list');
-  const sel=el.querySelector('input:checked')?.value;
-  el.innerHTML=t('courses').map((c,i)=>`
-    <div class="course-card ${sel==i?'selected':''}" onclick="selectCourse(${i},this)">
-      <input type="radio" name="course" value="${i}" ${sel==i?'checked':''}><div>
-      <div class="course-card-title">${c.t}</div><div class="course-card-desc">${c.d}</div></div>
-    </div>`).join('');
-}
-
-function selectCourse(i,el){
-  document.querySelectorAll('.course-card').forEach(c=>c.classList.remove('selected'));
-  el.classList.add('selected');el.querySelector('input').checked=true;
-  document.getElementById('err-course').style.display='none';
-}
-
-function buildSoftware(){
-  const el=document.getElementById('sw-grid');
-  const checked=Array.from(el.querySelectorAll('input:checked')).map(i=>i.value);
-  const last=t('sw').length-1;
-  const hadOther=document.getElementById('sw-other-text')?.value||'';
-  el.innerHTML=t('sw').map((s,i)=>`<div class="sw-item" onclick="toggleCheck(this,event)"><span>${s}</span><input type="checkbox" value="${i}" ${checked.includes(String(i))?'checked':''}></div>`).join('');
-  const of2=document.getElementById('sw-other-field');
-  of2.className='hidden-field'+(checked.includes(String(last))?' show':'');
-  document.getElementById('sw-other-text').placeholder=t('otherPlaceholder');
-  document.getElementById('sw-other-text').value=hadOther;
-  el.querySelectorAll('.sw-item').forEach((item,i)=>{
-    item.querySelector('input').addEventListener('change',()=>{if(i===last)of2.classList.toggle('show',item.querySelector('input').checked);});
-  });
-  document.getElementById('no-exp-btn').classList.toggle('active',noExpSelected);
-  if(noExpSelected){document.getElementById('sw-grid-wrap').style.opacity='0.35';document.getElementById('sw-grid-wrap').style.pointerEvents='none';}
-}
-
-function buildSkillTables(){
-  const cols=['none','basic','adv'];
-  const prev={cad:{},cam:{},gibbs:{}};
-  ['cad','cam','gibbs'].forEach(sec=>{document.querySelectorAll(`#${sec}-rows input`).forEach(inp=>{if(inp.checked)prev[sec][inp.name]=inp.value;});});
-  ['cad','cam','gibbs'].forEach(sec=>{
-    const el=document.getElementById(`${sec}-rows`);
-    const rows=t(`${sec}Rows`);
-    el.innerHTML=rows.map((r,ri)=>`<tr><td>${r}</td>${cols.map(c=>`<td><input type="radio" name="${sec}_${ri}" value="${c}" ${prev[sec][`${sec}_${ri}`]===c?'checked':''}></td>`).join('')}</tr>`).join('');
-  });
-}
-
-function buildGoals(){
-  const el=document.getElementById('goals-list');
-  const checked=Array.from(el.querySelectorAll('input:checked')).map(i=>i.value);
-  const last=t('goals').length-1;
-  const hadOther=document.getElementById('goals-other-text')?.value||'';
-  el.innerHTML=t('goals').map((g,i)=>`<div class="checkbox-item" onclick="toggleCheck(this,event)"><span>${g}</span><input type="checkbox" value="${i}" ${checked.includes(String(i))?'checked':''}></div>`).join('');
-  const gof=document.getElementById('goals-other-field');
-  gof.className='hidden-field'+(checked.includes(String(last))?' show':'');
-  document.getElementById('goals-other-text').placeholder=t('otherPlaceholder');
-  document.getElementById('goals-other-text').value=hadOther;
-  el.querySelectorAll('.checkbox-item').forEach((item,i)=>{
-    item.querySelector('input').addEventListener('change',()=>{if(i===last)gof.classList.toggle('show',item.querySelector('input').checked);});
-  });
-}
-
+// ── ניווט ──
 function updateNav(){
-  const isLast=currentPage===totalPages;
-  const btn=document.getElementById('btn-next');
-  btn.textContent=isLast?t('nextFinal'):t('next');
-  btn.className='btn btn-next';
-  const prevBtn=document.getElementById('btn-prev');
-  prevBtn.style.visibility=currentPage>1?'visible':'hidden';
-  prevBtn.textContent=t('prev');
-  document.getElementById('pager').textContent=`${totalPages} / ${currentPage}`;
-  document.getElementById('bottom-bar').style.display=currentPage>totalPages?'none':'flex';
+  const isLast=currentPage===TOTAL;
+  document.getElementById('btn-next').textContent=isLast?'סיום ›':'הבא ›';
+  document.getElementById('btn-prev').style.visibility=currentPage>1?'visible':'hidden';
+  document.getElementById('pager').textContent=`${TOTAL} / ${currentPage}`;
+  document.getElementById('bottom-bar').style.display=currentPage>TOTAL?'none':'flex';
 }
 
 function showPage(n){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  if(n>totalPages)document.getElementById('page-success').classList.add('active');
-  else{document.getElementById(`page${n}`).classList.add('active');if(n===4)updateGibbsSection();}
+  if(n>TOTAL) document.getElementById('page-success').classList.add('active');
+  else document.getElementById(`page${n}`).classList.add('active');
   window.scrollTo(0,0);
+  if(n===2) setTimeout(resizeSigCanvas,150);
 }
 
 function validatePage(){
   let ok=true;
-  const hide=id=>{const e=document.getElementById(id);if(e)e.style.display='none';};
   const show=id=>{const e=document.getElementById(id);if(e)e.style.display='block';};
+  const hide=id=>{const e=document.getElementById(id);if(e)e.style.display='none';};
   if(currentPage===1){
-    ['fname','lname','phone','company'].forEach(f=>{
-      if(!document.getElementById(f).value.trim()){show(`err-${f}`);ok=false;}else hide(`err-${f}`);
-    });
-    if(document.querySelector('input[name=selfregister]:checked')?.value==='no'){
-      if(!document.getElementById('candidate-name').value.trim()){show('err-candidate');ok=false;}else hide('err-candidate');
-    }
-    if(!document.querySelectorAll('#roles-list input[type=checkbox]:checked').length){show('err-role');ok=false;}else hide('err-role');
+    if(!document.getElementById('engineer').value){show('err-engineer');ok=false;}else hide('err-engineer');
+    if(!document.getElementById('visit-date').value){show('err-date');ok=false;}else hide('err-date');
+    if(!document.getElementById('customer').value.trim()){show('err-customer');ok=false;}else hide('err-customer');
+    if(!document.getElementById('contact').value.trim()){show('err-contact');ok=false;}else hide('err-contact');
+    if(!document.getElementById('phone').value.trim()){show('err-phone');ok=false;}else hide('err-phone');
+    if(!document.getElementById('software').value){show('err-software');ok=false;}else hide('err-software');
   }
-  if(currentPage===2){if(!document.querySelector('input[name=course]:checked')){show('err-course');ok=false;}else hide('err-course');}
-  if(currentPage===3){
-    if(!noExpSelected&&!document.querySelectorAll('#sw-grid input:checked').length){show('err-sw');ok=false;}else hide('err-sw');
-  }
-  if(currentPage===5){
-    if(!document.querySelectorAll('#goals-list input[type=checkbox]:checked').length){show('err-goals');ok=false;}else hide('err-goals');
+  if(currentPage===2){
+    if(!document.getElementById('time-start').value){show('err-time-start');ok=false;}else hide('err-time-start');
+    if(!document.getElementById('time-end').value){show('err-time-end');ok=false;}else hide('err-time-end');
+    if(!document.querySelectorAll('#purpose-list input:checked').length){show('err-purpose');ok=false;}else hide('err-purpose');
+    if(!sigHasData){show('err-sig');ok=false;}else hide('err-sig');
   }
   return ok;
 }
 
 function nextPage(){
-  if(!validatePage())return;
-  if(currentPage===totalPages){currentPage=totalPages+1;showPage(totalPages+1);updateNav();preparePDF();return;}
+  if(!validatePage()) return;
+  if(currentPage===TOTAL){currentPage=TOTAL+1;showPage(TOTAL+1);updateNav();preparePDF();return;}
   currentPage++;showPage(currentPage);updateNav();
 }
 function prevPage(){if(currentPage>1){currentPage--;showPage(currentPage);updateNav();}}
 
+// ── נתונים ──
+function getPurposes(){
+  const labels=['בדיקת פוסט פרוסוסר','מכירות','הדרכה','תמיכה טכנית','התקנה','מסירת פוסט פרוסוסר','מסירת פלאג','אחר'];
+  const checked=Array.from(document.querySelectorAll('#purpose-list input:checked'));
+  const list=checked.map(i=>labels[i.value]);
+  const other=document.getElementById('purpose-other-text')?.value.trim();
+  if(other&&list[list.length-1]==='אחר') list[list.length-1]='אחר – '+other;
+  return list.join(', ');
+}
+
 function getFormData(){
-  const roles=Array.from(document.querySelectorAll('#roles-list input[type=checkbox]:checked')).map(i=>t('roles')[i.value]);
-  const roleOther=document.getElementById('role-other-text')?.value.trim();
-  if(roleOther&&roles[roles.length-1]===t('roles')[t('roles').length-1])roles[roles.length-1]+=' – '+roleOther;
-  const courseIdx=document.querySelector('input[name=course]:checked')?.value;
-  const course=courseIdx!=null?t('courses')[courseIdx].t:'';
-  let swText=noExpSelected?t('noExp'):Array.from(document.querySelectorAll('#sw-grid input:checked')).map(i=>t('sw')[i.value]).join(', ')||'–';
-  if(!noExpSelected){const swOther=document.getElementById('sw-other-text')?.value.trim();const lastSw=t('sw').length-1;const swArr=swText.split(', ');if(swOther&&swArr[swArr.length-1]===t('sw')[lastSw]){swArr[swArr.length-1]+=' – '+swOther;swText=swArr.join(', ');}}
-  const goals=Array.from(document.querySelectorAll('#goals-list input[type=checkbox]:checked')).map(i=>t('goals')[i.value]);
-  const goalsOther=document.getElementById('goals-other-text')?.value.trim();
-  if(goalsOther&&goals[goals.length-1]===t('goals')[t('goals').length-1])goals[goals.length-1]+=' – '+goalsOther;
-  const getSkill=(sec,rows)=>rows.map((r,i)=>{const v=document.querySelector(`input[name=${sec}_${i}]:checked`)?.value;return{topic:r,level:{none:t('thNone'),basic:t('thBasic'),adv:t('thAdv')}[v]||'–'};});
-  const isNo=document.querySelector('input[name=selfregister]:checked')?.value==='no';
-  return{
-    fname:document.getElementById('fname').value.trim(),lname:document.getElementById('lname').value.trim(),
-    phone:document.getElementById('phone').value.trim(),company:document.getElementById('company').value.trim(),
-    candidateName:isNo?document.getElementById('candidate-name').value.trim():'',
-    roles:roles.join(', '),course,sw:swText,
-    cadSkills:getSkill('cad',t('cadRows')),camSkills:getSkill('cam',t('camRows')),
-    gibbsSkills:isGibbs()?getSkill('gibbs',t('gibbsRows')):[],
-    goals,expectations:document.getElementById('expectations').value.trim()
+  const followup=document.querySelector('input[name=followup]:checked')?.value;
+  const dateRaw=document.getElementById('visit-date').value;
+  return {
+    engineer:document.getElementById('engineer').value,
+    date:dateRaw?dateRaw.split('-').reverse().join('/'):'',
+    customer:document.getElementById('customer').value.trim(),
+    contact:document.getElementById('contact').value.trim(),
+    phone:document.getElementById('phone').value.trim(),
+    software:document.getElementById('software').value,
+    timeStart:document.getElementById('time-start').value,
+    timeEnd:document.getElementById('time-end').value,
+    travel:document.getElementById('travel').value.trim(),
+    purposes:getPurposes(),
+    purposeDetail:document.getElementById('purpose-detail').value.trim(),
+    description:document.getElementById('description').value.trim(),
+    followup:followup==='yes'?'כן':'לא',
+    followupDetail:followup==='yes'?document.getElementById('followup-detail').value.trim():'',
+    sigDataUrl:sigCanvas.toDataURL('image/png')
   };
 }
 
+// ── PDF ──
 function buildPdfHTML(d){
-  const dir=lang==='he'?'rtl':'ltr';
-  const dateStr=new Date().toLocaleDateString();
-  const orange='#E8611A',blue='#2A5FA8';
-  const logo=logoBase64?`<img src="${logoBase64}" style="height:36px" alt="Cimatron">`:'<span style="color:#fff;font-weight:700;font-size:18px">cimatron</span>';
-
-  const hdr=`<div style="background:${orange};padding:16px 28px;display:flex;align-items:center;justify-content:space-between;margin-bottom:20px"><div><div style="color:#fff;font-size:20px;font-weight:700">${t('headerTitle')}</div><div style="color:#ffe0cc;font-size:13px;margin-top:2px">${t('headerSub')}</div></div>${logo}</div>`;
-  const ftr=`<div style="border-top:1px solid #eee;padding:10px 32px;margin-top:20px;display:flex;justify-content:space-between;align-items:center;font-size:11px;color:#bbb"><span>${t('dateLabel')}: ${dateStr}</span></div>`;
-  const sec=(txt,cls)=>`<div style="background:${cls==='blue'?blue:orange};color:#fff;display:inline-block;padding:5px 14px;border-radius:5px;font-size:13px;font-weight:700;margin:14px 0 10px">${txt}</div>`;
-  const row=(l,v)=>v?`<div style="display:flex;gap:10px;margin-bottom:7px;font-size:13px;line-height:1.5"><span style="color:#999;min-width:120px;flex-shrink:0;font-size:12px">${l}</span><span style="color:#222;flex:1">${v}</span></div>`:'';
-  const skillRows=(arr,cls)=>arr.map(s=>`<div style="display:flex;justify-content:space-between;font-size:12px;padding:5px 0;border-bottom:1px solid #f0f0f0"><span style="color:#444;flex:1">${s.topic}</span><span style="color:${cls==='blue'?blue:orange};font-weight:700">${s.level}</span></div>`).join('');
-
+  const orange='#E8611A';
+  const logo=logoBase64?`<img src="${logoBase64}" style="height:36px" alt="Cimatron">`:`<span style="color:#fff;font-weight:700;font-size:18px">cimatron</span>`;
+  const row=(l,v)=>v?`<div style="display:flex;gap:10px;margin-bottom:8px;font-size:13px;line-height:1.6"><span style="color:#999;min-width:130px;flex-shrink:0;font-size:12px">${l}</span><span style="color:#222;flex:1">${v}</span></div>`:'';
+  const sec=(txt)=>`<div style="background:${orange};color:#fff;display:inline-block;padding:5px 16px;border-radius:6px;font-size:13px;font-weight:700;margin:16px 0 10px">${txt}</div>`;
+  const hdr=`<div style="background:${orange};padding:16px 28px;display:flex;align-items:center;justify-content:space-between;margin-bottom:20px"><div><div style="color:#fff;font-size:20px;font-weight:700">דו"ח ביקור לקוח</div><div style="color:#ffe0cc;font-size:13px;margin-top:2px">צוות סימטרון ישראל</div></div>${logo}</div>`;
+  const ftr=`<div style="border-top:1px solid #eee;padding:10px 32px;margin-top:20px;font-size:11px;color:#bbb">תאריך הפקה: ${new Date().toLocaleDateString('he-IL')}</div>`;
   const content=`
-    ${sec(t('p1'))}
-    ${row(t('fname'),d.fname+' '+d.lname)}
-    ${d.candidateName?row(t('candidate'),d.candidateName):''}
-    ${row(t('phone'),d.phone)}
-    ${row(t('company'),d.company)}
-    ${row(t('role'),d.roles)}
-    ${sec(t('p2'))}
-    <div style="font-size:13px;font-weight:700;color:#222;margin-bottom:14px">${d.course}</div>
-    ${sec(t('p3'))}
-    <div style="font-size:13px;color:#222;margin-bottom:14px">${d.sw}</div>
-    ${sec(t('p4'))}
-    ${!isGibbs()&&d.cadSkills.length?`<div style="font-size:13px;font-weight:700;color:${orange};margin:8px 0 4px">CAD</div>${skillRows(d.cadSkills)}`:''}
-    ${d.camSkills.length?`<div style="font-size:13px;font-weight:700;color:${orange};margin:10px 0 4px">CAM</div>${skillRows(d.camSkills)}`:''}
-    ${d.gibbsSkills.length?`<div style="font-size:13px;font-weight:700;color:${blue};margin:10px 0 4px">GibbsCAM</div>${skillRows(d.gibbsSkills,'blue')}`:''}
-    ${sec(t('p5'))}
-    ${d.goals.map(g=>`<div style="font-size:13px;padding:3px 0;color:#333">• ${g}</div>`).join('')}
-    ${d.expectations?`${sec(t('expectations').replace(/ \(.*\)/,''))}<div style="font-size:14px;color:#333;line-height:1.7">${d.expectations}</div>`:''}
+    ${sec('פרטי ביקור')}
+    ${row('שם המבקר/המהנדס',d.engineer)}
+    ${row('תאריך הביקור',d.date)}
+    ${row('שם הלקוח / עסק',d.customer)}
+    ${row('איש קשר',d.contact)}
+    ${row('טלפון לקוח',d.phone)}
+    ${row('סוג תוכנה',d.software)}
+    ${sec('זמנים ונסיעות')}
+    ${row('שעת הגעה',d.timeStart)}
+    ${row('שעת סיום',d.timeEnd)}
+    ${d.travel?row('נסיעות',d.travel):''}
+    ${sec('מטרת הביקור')}
+    <div style="font-size:13px;color:#333;margin-bottom:8px">${d.purposes}</div>
+    ${d.purposeDetail?`<div style="font-size:13px;color:#555;margin-top:6px;line-height:1.7;white-space:pre-wrap">${d.purposeDetail}</div>`:''}
+    ${sec('תיאור הביקור')}
+    <div style="font-size:13px;color:#333;line-height:1.7;margin-bottom:8px;white-space:pre-wrap">${d.description}</div>
+    ${sec('המשך טיפול')}
+    ${row('נדרש המשך טיפול',d.followup)}
+    ${d.followupDetail?row('פירוט',d.followupDetail):''}
+    ${sec('חתימת הלקוח')}
+    <div style="margin-top:6px"><img src="${d.sigDataUrl}" style="max-height:100px;border:1px solid #eee;border-radius:8px;background:#fafafa;padding:6px"></div>
   `;
-
-  return `<div style="width:900px;background:#fff;font-family:Arial,sans-serif;direction:${dir};padding:0 32px 32px">${hdr}${content}${ftr}</div>`;
+  return `<div style="width:900px;background:#fff;font-family:Arial,sans-serif;direction:rtl;padding:0 32px 32px">${hdr}${content}${ftr}</div>`;
 }
 
 async function preparePDF(){
   const d=getFormData();
-  const candidateName=(d.candidateName||d.fname+' '+d.lname).trim();
-  savedFilename=`שאלון-קדם-קורס-${candidateName}.pdf`.replace(/\s+/g,'-');
+  savedFilename=`דוח-ביקור-${(d.customer||'לקוח').replace(/\s+/g,'-')}-${d.date.replace(/\//g,'-')}.pdf`;
   const overlay=document.getElementById('loading-overlay');
-  document.getElementById('loading-text').textContent=t('loading');
   overlay.classList.add('show');
   const tmpl=document.getElementById('pdf-template');
   tmpl.innerHTML=buildPdfHTML(d);
@@ -618,53 +457,51 @@ async function preparePDF(){
   await new Promise(r=>setTimeout(r,500));
   try{
     const {jsPDF}=window.jspdf;
-    const A4_WIDTH_MM=210, A4_HEIGHT_MM=297;
-    const SCALE=2.5;
-    const PX_PER_MM=900/A4_WIDTH_MM; // pixels per mm at 900px wide
-    const pageHeightPx=A4_HEIGHT_MM*PX_PER_MM;
-
+    const A4W=210,A4H=297,SCALE=2.5;
+    const pageHeightPx=A4H*(900/A4W);
     const canvas=await html2canvas(tmpl.children[0],{scale:SCALE,useCORS:true,backgroundColor:'#ffffff',logging:false,width:900});
-    const totalHeightPx=canvas.height/SCALE;
-    const totalPages=Math.ceil(totalHeightPx/pageHeightPx);
-
+    const totalPages=Math.ceil((canvas.height/SCALE)/pageHeightPx);
     const pdf=new jsPDF({orientation:'p',unit:'mm',format:'a4'});
     for(let i=0;i<totalPages;i++){
-      if(i>0)pdf.addPage();
+      if(i>0) pdf.addPage();
       const srcY=i*pageHeightPx*SCALE;
-      const srcH=Math.min(pageHeightPx*SCALE, canvas.height-srcY);
-      const pageCanvas=document.createElement('canvas');
-      pageCanvas.width=canvas.width;
-      pageCanvas.height=pageHeightPx*SCALE;
-      const ctx=pageCanvas.getContext('2d');
-      ctx.fillStyle='#ffffff';
-      ctx.fillRect(0,0,pageCanvas.width,pageCanvas.height);
+      const srcH=Math.min(pageHeightPx*SCALE,canvas.height-srcY);
+      const pc=document.createElement('canvas');
+      pc.width=canvas.width; pc.height=pageHeightPx*SCALE;
+      const ctx=pc.getContext('2d');
+      ctx.fillStyle='#ffffff'; ctx.fillRect(0,0,pc.width,pc.height);
       ctx.drawImage(canvas,0,srcY,canvas.width,srcH,0,0,canvas.width,srcH);
-      pdf.addImage(pageCanvas.toDataURL('image/jpeg',0.85),'JPEG',0,0,A4_WIDTH_MM,A4_HEIGHT_MM);
+      pdf.addImage(pc.toDataURL('image/jpeg',0.85),'JPEG',0,0,A4W,A4H);
     }
     savedPdfBlob=pdf.output('blob');
   }catch(e){console.error(e);alert('שגיאה ביצירת PDF');}
   finally{tmpl.style.display='none';overlay.classList.remove('show');}
 }
 
+function goBackToEdit(){
+  savedPdfBlob = null;
+  currentPage = TOTAL;
+  showPage(TOTAL);
+  updateNav();
+}
+
 function doSavePDF(){
-  if(!savedPdfBlob)return;
+  if(!savedPdfBlob) return;
   const url=URL.createObjectURL(savedPdfBlob);
-  const a=document.createElement('a');a.href=url;a.download=savedFilename;a.click();
+  const a=document.createElement('a'); a.href=url; a.download=savedFilename; a.click();
   setTimeout(()=>URL.revokeObjectURL(url),2000);
 }
 
 async function doShare(){
-  if(!savedPdfBlob)return;
+  if(!savedPdfBlob) return;
   const file=new File([savedPdfBlob],savedFilename,{type:'application/pdf'});
   if(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})){
-    try{await navigator.share({title:t('headerTitle'),files:[file]});}
+    try{await navigator.share({title:'דו"ח ביקור לקוח',files:[file]});}
     catch(e){if(e.name!=='AbortError')doSavePDF();}
-  }else{
-    window.open(`mailto:shay.aziz@cimatron.com?subject=${encodeURIComponent(t('headerTitle'))}`,'_self');
-  }
+  } else { doSavePDF(); }
 }
 
-rebuildAll();
+updateNav();
 </script>
 </body>
 </html>
