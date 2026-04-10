@@ -19,7 +19,7 @@ header{background:#fff;border-bottom:1px solid #ddd;padding:10px 16px;display:fl
 .page.active{display:block}
 
 .field-group{background:#fff;border-radius:12px;padding:14px 16px;margin:10px 0}
-.field-label{font-size:14px;color:#E8611A;font-weight:600;margin-bottom:8px;display:flex;align-items:center;gap:6px;justify-content:flex-end}
+.field-label{font-size:14px;color:#E8611A;font-weight:600;margin-bottom:8px;display:flex;align-items:center;gap:6px;justify-content:flex-start}
 .required{color:#E8611A}
 
 .field-input{width:100%;border:1.5px solid #e0e0e0;border-radius:10px;padding:12px 14px;font-size:15px;font-family:Arial;outline:none;color:#222;background:#f8f8f8;direction:rtl}
@@ -32,6 +32,8 @@ select.field-input{appearance:none;-webkit-appearance:none;background-image:url(
 .time-group{background:#fff;border-radius:12px;padding:14px 16px}
 
 .checkbox-list{display:flex;flex-direction:column;gap:8px;margin-top:4px}
+.purpose-wrap{display:flex;flex-direction:column;gap:4px}
+.purpose-detail-field{padding:0 4px}
 .checkbox-item{display:flex;align-items:center;justify-content:flex-end;flex-direction:row-reverse;gap:10px;padding:11px 14px;background:#f8f8f8;border:1.5px solid #e0e0e0;border-radius:10px;cursor:pointer;font-size:14px;color:#333;transition:all 0.15s}
 .checkbox-item:has(input:checked){border-color:#E8611A;background:#fff8f5;color:#E8611A;font-weight:600}
 .checkbox-item input[type=checkbox]{accent-color:#E8611A;width:18px;height:18px;cursor:pointer;flex-shrink:0}
@@ -54,8 +56,8 @@ canvas#sig-canvas{display:block;width:100%;height:180px;cursor:crosshair;touch-a
 .btn-next{background:#E8611A;color:#fff}
 .btn-prev{background:#fff;color:#E8611A;border:2px solid #E8611A}
 
-.success-box{text-align:center;padding:32px 20px}
-.action-bar{display:flex;flex-direction:column;gap:12px;margin-top:28px;align-items:center}
+.success-box{text-align:right;padding:32px 20px}
+.action-bar{display:flex;flex-direction:column;gap:12px;margin-top:28px;align-items:flex-end}
 .btn-action{width:220px;padding:14px;font-size:16px;border-radius:10px;cursor:pointer;font-weight:700;border:none;display:flex;align-items:center;justify-content:center;gap:8px}
 .btn-pdf{background:#E8611A;color:#fff}
 .btn-share{background:#fff;color:#E8611A;border:2px solid #E8611A}
@@ -89,6 +91,7 @@ canvas#sig-canvas{display:block;width:100%;height:180px;cursor:crosshair;touch-a
   <img id="logo-img" alt="Cimatron" style="height:38px;object-fit:contain">
   <div class="header-title">דו"ח ביקור לקוח – סימטרון</div>
   <div class="header-sub">צוות סימטרון ישראל</div>
+  <div style="font-size:10px;color:#bbb;margin-top:2px">v1.0</div>
 </header>
 
 <!-- PAGE 1 -->
@@ -170,21 +173,38 @@ canvas#sig-canvas{display:block;width:100%;height:180px;cursor:crosshair;touch-a
   <div class="field-group">
     <div class="field-label"><span class="required">*</span> מטרת הביקור</div>
     <div class="checkbox-list" id="purpose-list">
-      <label class="checkbox-item"><span>בדיקת פוסט פרוסוסר</span><input type="checkbox" value="0"></label>
-      <label class="checkbox-item"><span>מכירות</span><input type="checkbox" value="1"></label>
-      <label class="checkbox-item"><span>הדרכה</span><input type="checkbox" value="2"></label>
-      <label class="checkbox-item"><span>תמיכה טכנית</span><input type="checkbox" value="3"></label>
-      <label class="checkbox-item"><span>התקנה</span><input type="checkbox" value="4"></label>
-      <label class="checkbox-item"><span>מסירת פוסט פרוסוסר</span><input type="checkbox" value="5"></label>
-      <label class="checkbox-item"><span>מסירת פלאג</span><input type="checkbox" value="6"></label>
-      <label class="checkbox-item"><span>אחר</span><input type="checkbox" value="7" id="purpose-other-cb"></label>
-    </div>
-    <div class="hidden-field" id="purpose-other-field">
-      <input class="other-input" id="purpose-other-text" type="text" placeholder="פרט כאן...">
-    </div>
-    <div style="margin-top:10px">
-      <div class="field-label" style="font-size:13px;margin-bottom:6px">פירוט נוסף (אופציונלי)</div>
-      <textarea class="other-input" id="purpose-detail" rows="3" placeholder="פרט את מטרת הביקור בחופשיות..." style="resize:vertical;min-height:70px;line-height:1.6"></textarea>
+      <div class="purpose-wrap">
+        <label class="checkbox-item" onclick="togglePurposeDetail(0,this,event)"><span>בדיקת פוסט פרוסוסר</span><input type="checkbox" value="0"></label>
+        <div class="purpose-detail-field hidden-field" id="pd-0"><input class="other-input" type="text" placeholder="פרט..."></div>
+      </div>
+      <div class="purpose-wrap">
+        <label class="checkbox-item" onclick="togglePurposeDetail(1,this,event)"><span>מכירות</span><input type="checkbox" value="1"></label>
+        <div class="purpose-detail-field hidden-field" id="pd-1"><input class="other-input" type="text" placeholder="פרט..."></div>
+      </div>
+      <div class="purpose-wrap">
+        <label class="checkbox-item" onclick="togglePurposeDetail(2,this,event)"><span>הדרכה</span><input type="checkbox" value="2"></label>
+        <div class="purpose-detail-field hidden-field" id="pd-2"><input class="other-input" type="text" placeholder="פרט..."></div>
+      </div>
+      <div class="purpose-wrap">
+        <label class="checkbox-item" onclick="togglePurposeDetail(3,this,event)"><span>תמיכה טכנית</span><input type="checkbox" value="3"></label>
+        <div class="purpose-detail-field hidden-field" id="pd-3"><input class="other-input" type="text" placeholder="פרט..."></div>
+      </div>
+      <div class="purpose-wrap">
+        <label class="checkbox-item" onclick="togglePurposeDetail(4,this,event)"><span>התקנה</span><input type="checkbox" value="4"></label>
+        <div class="purpose-detail-field hidden-field" id="pd-4"><input class="other-input" type="text" placeholder="פרט..."></div>
+      </div>
+      <div class="purpose-wrap">
+        <label class="checkbox-item" onclick="togglePurposeDetail(5,this,event)"><span>מסירת פוסט פרוסוסר</span><input type="checkbox" value="5"></label>
+        <div class="purpose-detail-field hidden-field" id="pd-5"><input class="other-input" type="text" placeholder="פרט..."></div>
+      </div>
+      <div class="purpose-wrap">
+        <label class="checkbox-item" onclick="togglePurposeDetail(6,this,event)"><span>מסירת פלאג</span><input type="checkbox" value="6"></label>
+        <div class="purpose-detail-field hidden-field" id="pd-6"><input class="other-input" type="text" placeholder="פרט..."></div>
+      </div>
+      <div class="purpose-wrap">
+        <label class="checkbox-item" onclick="togglePurposeDetail(7,this,event)"><span>אחר</span><input type="checkbox" value="7"></label>
+        <div class="purpose-detail-field hidden-field" id="pd-7"><input class="other-input" type="text" placeholder="פרט..."></div>
+      </div>
     </div>
     <div class="error-msg" id="err-purpose">יש לבחור לפחות מטרה אחת</div>
   </div>
@@ -223,9 +243,9 @@ canvas#sig-canvas{display:block;width:100%;height:180px;cursor:crosshair;touch-a
 <!-- Success -->
 <div class="page" id="page-success">
   <div class="success-box">
-    <div style="font-size:52px;margin-bottom:12px">✅</div>
-    <h2 style="margin-bottom:8px;color:#E8611A">הדוח הושלם!</h2>
-    <p style="color:#666;font-size:14px;line-height:1.7">ניתן לשמור את ה-PDF ולשלוח אותו.</p>
+    <div style="font-size:52px;margin-bottom:12px;text-align:right">✅</div>
+    <h2 style="margin-bottom:8px;color:#E8611A;text-align:right">הדוח הושלם!</h2>
+    <p style="color:#666;font-size:14px;line-height:1.7;text-align:right">ניתן לשמור את ה-PDF ולשלוח אותו.</p>
     <div class="action-bar">
       <button class="btn-action btn-pdf" onclick="doSavePDF()">
         <span style="font-size:18px">📄</span><span>שמור PDF</span>
@@ -322,9 +342,22 @@ function clearSignature(){
 }
 
 // ── אחר במטרה ──
-document.getElementById('purpose-other-cb').addEventListener('change', function(){
-  document.getElementById('purpose-other-field').classList.toggle('show', this.checked);
-});
+function togglePurposeDetail(idx, label, event){
+  const cb = label.querySelector('input[type=checkbox]');
+  if(event && event.target === cb) {
+    // let checkbox handle itself, then sync
+    setTimeout(()=>syncPurposeDetail(idx, cb.checked), 0);
+    return;
+  }
+  cb.checked = !cb.checked;
+  syncPurposeDetail(idx, cb.checked);
+}
+function syncPurposeDetail(idx, checked){
+  const field = document.getElementById('pd-'+idx);
+  if(checked){ field.classList.add('show'); }
+  else { field.classList.remove('show'); field.querySelector('input').value=''; }
+  document.getElementById('err-purpose').style.display='none';
+}
 
 // ── המשך טיפול ──
 function updateRadio(){
@@ -382,11 +415,12 @@ function prevPage(){if(currentPage>1){currentPage--;showPage(currentPage);update
 // ── נתונים ──
 function getPurposes(){
   const labels=['בדיקת פוסט פרוסוסר','מכירות','הדרכה','תמיכה טכנית','התקנה','מסירת פוסט פרוסוסר','מסירת פלאג','אחר'];
-  const checked=Array.from(document.querySelectorAll('#purpose-list input:checked'));
-  const list=checked.map(i=>labels[i.value]);
-  const other=document.getElementById('purpose-other-text')?.value.trim();
-  if(other&&list[list.length-1]==='אחר') list[list.length-1]='אחר – '+other;
-  return list.join(', ');
+  const checked=Array.from(document.querySelectorAll('#purpose-list input[type=checkbox]:checked'));
+  return checked.map(i=>{
+    const label=labels[i.value];
+    const detail=document.getElementById('pd-'+i.value)?.querySelector('input')?.value.trim();
+    return detail ? label+' – '+detail : label;
+  }).join(', ');
 }
 
 function getFormData(){
@@ -403,7 +437,6 @@ function getFormData(){
     timeEnd:document.getElementById('time-end').value,
     travel:document.getElementById('travel').value.trim(),
     purposes:getPurposes(),
-    purposeDetail:document.getElementById('purpose-detail').value.trim(),
     description:document.getElementById('description').value.trim(),
     followup:followup==='yes'?'כן':'לא',
     followupDetail:followup==='yes'?document.getElementById('followup-detail').value.trim():'',
@@ -433,7 +466,6 @@ function buildPdfHTML(d){
     ${d.travel?row('נסיעות',d.travel):''}
     ${sec('מטרת הביקור')}
     <div style="font-size:13px;color:#333;margin-bottom:8px">${d.purposes}</div>
-    ${d.purposeDetail?`<div style="font-size:13px;color:#555;margin-top:6px;line-height:1.7;white-space:pre-wrap">${d.purposeDetail}</div>`:''}
     ${sec('תיאור הביקור')}
     <div style="font-size:13px;color:#333;line-height:1.7;margin-bottom:8px;white-space:pre-wrap">${d.description}</div>
     ${sec('המשך טיפול')}
