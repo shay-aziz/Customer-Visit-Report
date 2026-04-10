@@ -91,7 +91,7 @@ canvas#sig-canvas{display:block;width:100%;height:180px;cursor:crosshair;touch-a
   <img id="logo-img" alt="Cimatron" style="height:38px;object-fit:contain">
   <div class="header-title">דו"ח ביקור לקוח – סימטרון</div>
   <div class="header-sub">צוות סימטרון ישראל</div>
-  <div style="font-size:10px;color:#bbb;margin-top:2px">v1.5</div>
+  <div style="font-size:10px;color:#bbb;margin-top:2px">v1.6</div>
 </header>
 
 <!-- PAGE 1 -->
@@ -432,15 +432,16 @@ function nextPage(){
 function prevPage(){if(currentPage>1){currentPage--;showPage(currentPage);updateNav();}}
 
 // ── נתונים ──
-function getPurposes(){
+function getPurposesArray(){
   const labels=['בדיקת פוסט פרוסוסר','מכירות','הדרכה','תמיכה טכנית','התקנה','מסירת פוסט פרוסוסר','מסירת פלאג','אחר'];
   const checked=Array.from(document.querySelectorAll('#purpose-list input[type=checkbox]:checked'));
   return checked.map(i=>{
     const label=labels[i.value];
     const detail=document.getElementById('pd-'+i.value)?.querySelector('input')?.value.trim();
     return detail ? label+' – '+detail : label;
-  }).join(', ');
+  });
 }
+function getPurposes(){ return getPurposesArray().join(', '); }
 
 function getFormData(){
   const followup=document.querySelector('input[name=followup]:checked')?.value;
@@ -454,7 +455,7 @@ function getFormData(){
     timeStart:document.getElementById('time-start').value,
     timeEnd:document.getElementById('time-end').value,
     travel:document.getElementById('travel').value.trim(),
-    purposes:getPurposes(),
+    purposes:getPurposesArray(),
     description:document.getElementById('description').value.trim(),
     followup:followup==='yes'?'כן':'לא',
     followupDetail:followup==='yes'?document.getElementById('followup-detail').value.trim():'',
@@ -483,7 +484,7 @@ function buildPdfHTML(d){
     ${row('שעת סיום',d.timeEnd)}
     ${d.travel?row('נסיעות',d.travel):''}
     ${sec('מטרת הביקור')}
-    <div style="font-size:13px;color:#333;margin-bottom:8px">${d.purposes}</div>
+    ${d.purposes.map(p=>`<div style="font-size:13px;color:#333;padding:4px 0;border-bottom:1px solid #f5f5f5;display:flex;gap:8px"><span style="color:#E8611A;font-weight:700">•</span><span>${p}</span></div>`).join('')}
     ${sec('תיאור הביקור')}
     <div style="font-size:13px;color:#333;line-height:1.7;margin-bottom:8px;white-space:pre-wrap">${d.description}</div>
     ${sec('המשך טיפול')}
