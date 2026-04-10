@@ -91,7 +91,7 @@ canvas#sig-canvas{display:block;width:100%;height:180px;cursor:crosshair;touch-a
   <img id="logo-img" alt="Cimatron" style="height:38px;object-fit:contain">
   <div class="header-title">דו"ח ביקור לקוח – סימטרון</div>
   <div class="header-sub">צוות סימטרון ישראל</div>
-  <div style="font-size:10px;color:#bbb;margin-top:2px">v1.0</div>
+  <div style="font-size:10px;color:#bbb;margin-top:2px">v1.5</div>
 </header>
 
 <!-- PAGE 1 -->
@@ -113,7 +113,7 @@ canvas#sig-canvas{display:block;width:100%;height:180px;cursor:crosshair;touch-a
 
   <div class="field-group">
     <div class="field-label"><span class="required">*</span> תאריך הביקור 📅</div>
-    <input class="field-input" id="visit-date" type="date">
+    <input class="field-input date-styled" id="visit-date-display" type="text" placeholder="DD/MM/YY" maxlength="8" inputmode="numeric" readonly style="cursor:pointer" onclick="this.removeAttribute('readonly');this.type='date';this.focus()" onblur="collapseDate(this)" onchange="collapseDate(this)">
     <div class="error-msg" id="err-date">שדה חובה</div>
   </div>
 
@@ -288,7 +288,26 @@ fetch('logo.png')
   .catch(() => { document.getElementById('logo-img').style.display = 'none'; });
 
 // ── תאריך אוטומטי ──
-document.getElementById('visit-date').value = new Date().toISOString().split('T')[0];
+// init date
+(function(){
+  const today = new Date();
+  const dd = String(today.getDate()).padStart(2,'0');
+  const mm = String(today.getMonth()+1).padStart(2,'0');
+  const yyyy = String(today.getFullYear());
+  document.getElementById('visit-date-display').value = dd+'/'+mm+'/'+yyyy;
+})();
+
+function collapseDate(el){
+  if(el.type === 'date' && el.value){
+    const [y,m,d] = el.value.split('-');
+    el.type = 'text';
+    el.setAttribute('readonly','');
+    el.value = d+'/'+m+'/'+y;
+  } else if(el.type === 'date' && !el.value){
+    el.type = 'text';
+    el.setAttribute('readonly','');
+  }
+}
 
 // ── חתימה ──
 const sigCanvas = document.getElementById('sig-canvas');
@@ -390,7 +409,7 @@ function validatePage(){
   const hide=id=>{const e=document.getElementById(id);if(e)e.style.display='none';};
   if(currentPage===1){
     if(!document.getElementById('engineer').value){show('err-engineer');ok=false;}else hide('err-engineer');
-    if(!document.getElementById('visit-date').value){show('err-date');ok=false;}else hide('err-date');
+    const dv=document.getElementById('visit-date-display').value; if(!dv||dv.length<6){show('err-date');ok=false;}else hide('err-date');
     if(!document.getElementById('customer').value.trim()){show('err-customer');ok=false;}else hide('err-customer');
     if(!document.getElementById('contact').value.trim()){show('err-contact');ok=false;}else hide('err-contact');
     if(!document.getElementById('phone').value.trim()){show('err-phone');ok=false;}else hide('err-phone');
@@ -425,10 +444,9 @@ function getPurposes(){
 
 function getFormData(){
   const followup=document.querySelector('input[name=followup]:checked')?.value;
-  const dateRaw=document.getElementById('visit-date').value;
   return {
     engineer:document.getElementById('engineer').value,
-    date:dateRaw?dateRaw.split('-').reverse().join('/'):'',
+    date:document.getElementById('visit-date-display').value,
     customer:document.getElementById('customer').value.trim(),
     contact:document.getElementById('contact').value.trim(),
     phone:document.getElementById('phone').value.trim(),
